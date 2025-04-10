@@ -12,15 +12,17 @@ def canUnlockAll(boxes):
         boxes (list of lists)
     Returns: True or False
     """
-    keys = sum(boxes, [])
-    unique_keys = sorted(set(sum(boxes, [])))
-    for i in range(1, len(boxes)):
-        if (len([j for j in boxes[i - 1]
-                 if j in range(1, len(boxes))]) == len(boxes) - 1):
+    keys = list(set(boxes[0]))
+    locked_boxes = []
+    for box in range(1, len(boxes)):
+        if (len(keys) == len(boxes)):
             return True
-        alt_keys = sorted(set(sum(boxes[0:i] + boxes[i + 1:], [])))
-        if i not in unique_keys:
-            return False
-        if i not in alt_keys:
-            return False
-    return True
+        if box not in keys:
+            locked_boxes.append(box)
+        else:
+            keys = list(set(keys + boxes[box]))
+            for key in locked_boxes:
+                if key in keys:
+                    locked_boxes.remove(key)
+                    keys = list(set(keys + boxes[key]))
+    return len(locked_boxes) == 0
